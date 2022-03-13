@@ -3,7 +3,7 @@ library(tidyverse)
 library(knitr)
 library(dplyr)
 
-#Overall Life Satisfaction Table
+#Overall Life Satisfaction Table - Data Section
 satisfaction <- read_csv(file = "Graph 1_ Overall life satisfaction by Age, 2014 - 2020.csv")
 satisfaction <- data.frame(satisfaction)
 satisfaction <- subset(satisfaction, select = c(1, 3, 4))
@@ -14,7 +14,7 @@ g1 <-
   satisfaction |>
   gather(Year, Score, 2:3)
 
-#Face to Face Contact Table
+#Face to Face Contact Table - Data Section
 contact <- read_csv(file = "Graph 4_ Face to face contact with family or friends living outside their household by Age, 2019 and 2020.csv")
 contact <- data.frame(contact)
 contact <- subset(contact, select = c(1, 2, 3))
@@ -61,7 +61,7 @@ g2 |>
   theme_minimal() + 
   labs(x = "Age Group", y = "Percentage (%)", title = "Figure 2: Face to Face Contact with Friends or Family Outside of Household", caption = "General Social Survey: Summary Results, Australia")
 
-#Combined Table of the two
+#Combined Table of the two - Result Section
 change <- merge(satisfaction, contact, by = "Age Group")
 
 change <- 
@@ -128,7 +128,7 @@ demographics |>
   ) |>  
   add_header_above(c(" " = 1, "2019" = 4, "2020" = 4))
 
-#Visualization of Graphs 4 and 5 (Age and Gender Distribution)
+#Visualization of Graphs 4 and 5 (Age and Gender Distribution) - Data Section
 age <- 
   demographics |>
   select(`Age Group`, `2019_Total`, `2020_Total`) |>
