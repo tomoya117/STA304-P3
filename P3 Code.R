@@ -49,14 +49,14 @@ contact |>
 
 #Visualization of Graphs 1 and 2
 g1 |> 
-  ggplot(aes(x = `Age Group`, y = Score, group = Year, fill = Year)) +
+  ggplot(aes(x = `Age Group`, y = as.numeric(Score), group = Year, fill = Year)) +
   geom_col(position = "dodge", alpha = 0.8) +
   theme_minimal() + 
   labs(x = "Age Group", y = "Score", title = "Figure 1: Overall Life Satisfaction by Age", caption = "General Social Survey: Summary Results, Australia")
 
 
 g2 |> 
-  ggplot(aes(x = `Age Group`, y = Percentage, group = Year, fill = Year)) +
+  ggplot(aes(x = `Age Group`, y = as.numeric(Percentage), group = Year, fill = Year)) +
   geom_col(position = "dodge", alpha = 0.8) +
   theme_minimal() + 
   labs(x = "Age Group", y = "Percentage (%)", title = "Figure 2: Face to Face Contact with Friends or Family Outside of Household", caption = "General Social Survey: Summary Results, Australia")
@@ -68,7 +68,7 @@ change <-
   change |>
   select(`Age Group`, `2019.x`, `2020.x`, `2019.y`, `2020.y`) |>
   mutate(s_decrease = (as.numeric(`2019.x`) - as.numeric(`2020.x`))/as.numeric(`2019.x`), c_decrease = (as.numeric(`2019.y`) - as.numeric(`2020.y`))/as.numeric(`2019.y`))
-colnames(change) <- c("Age Group", "s_2019", "s_2020", "c_2019", "c_2020", "s_decrease", "c_descrease")
+colnames(change) <- c("Age Group", "s_2019", "s_2020", "c_2019", "c_2020", "s_decrease", "c_decrease")
 
 g3 <- 
   change |>
@@ -92,7 +92,7 @@ change |>
   )
 #Visualization of the graph 3
 g3 |> 
-  ggplot(aes(x = `Age Group`, y = Percentage, group = `decrease`, fill = `decrease`)) +
+  ggplot(aes(x = `Age Group`, y = as.numeric(Percentage), group = `decrease`, fill = `decrease`)) +
   geom_col(position = "dodge", alpha = 0.8) +
   theme_minimal() + 
   labs(x = "Age Group", y = "Decreases in scores between 2019 and 2020", title = "Figure 3: Relationship between Face to Face Contact and Life Satisfaction", caption = "General Social Survey: Summary Results, Australia")
@@ -114,6 +114,15 @@ demographics <-
   mutate(`2020_Female` = gsub(",", "", `2020_Female`)) |>
   mutate(`2019_Other` = as.numeric(`2019_Total`) - as.numeric(`2019_Male`) - as.numeric(`2019_Female`)) |> 
   mutate(`2020_Other` = as.numeric(`2020_Total`) - as.numeric(`2020_Male`) - as.numeric(`2020_Female`))
+
+demographics$`2019_Male` <- as.integer(demographics$`2019_Male`)
+demographics$`2019_Female` <- as.integer(demographics$`2019_Female`)
+demographics$`2019_Other` <- as.integer(demographics$`2019_Other`)
+demographics$`2019_Total` <- as.integer(demographics$`2019_Total`)
+demographics$`2020_Male` <- as.integer(demographics$`2020_Male`)
+demographics$`2020_Female` <- as.integer(demographics$`2020_Female`)
+demographics$`2020_Other` <- as.integer(demographics$`2020_Other`)
+demographics$`2020_Total` <- as.integer(demographics$`2020_Total`)
 
 #Visualization of Table 4
 demographics |>
