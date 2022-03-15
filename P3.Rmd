@@ -11,12 +11,9 @@ library(kableExtra)
 ```
 
 ```{r}
-finance <- read_csv("Table 16.1_proportion-Table 1.csv")
-finance <- data.frame(finance)
-finance <- subset(finance, select = c(1, 2, 3, 4, 5, 6))
-finance <- finance[c(8, 9, 11, 12, 14, 15), ]
-colnames(finance) <- c('Description', '2006', '2010', '2014', '2019', '2020')
+data <- read_csv(file = "Table 17.1_Proportion-Table 1.csv")
 ```
+
 ```{r}
 demographics <- read_csv(file = "GSS_Table1.csv")
 demographics <- data.frame(demographics)
@@ -34,6 +31,15 @@ demographics <-
   mutate(`2020_Female` = gsub(",", "", `2020_Female`)) |>
   mutate(`2019_Other` = as.numeric(`2019_Total`) - as.numeric(`2019_Male`) - as.numeric(`2019_Female`)) |> 
   mutate(`2020_Other` = as.numeric(`2020_Total`) - as.numeric(`2020_Male`) - as.numeric(`2020_Female`))
+
+demographics$`2019_Male` <- as.integer(demographics$`2019_Male`)
+demographics$`2019_Female` <- as.integer(demographics$`2019_Female`)
+demographics$`2019_Other` <- as.integer(demographics$`2019_Other`)
+demographics$`2019_Total` <- as.integer(demographics$`2019_Total`)
+demographics$`2020_Male` <- as.integer(demographics$`2020_Male`)
+demographics$`2020_Female` <- as.integer(demographics$`2020_Female`)
+demographics$`2020_Other` <- as.integer(demographics$`2020_Other`)
+demographics$`2020_Total` <- as.integer(demographics$`2020_Total`)
 ```
 ```{r}
 demographics |>
@@ -87,13 +93,124 @@ gender <-
 ```
 ```{r}
 gender |> 
-  ggplot(aes(x = Gender, y = Count, group = Year, fill = Year)) +
+  ggplot(aes(x = Gender, y = Count, group = Year, fill = Year, xlim = 100)) +
   geom_col(position = "dodge", alpha = 0.8) +
   theme_minimal() + 
   labs(x = "Gender", title = "Figure 5: Survey Respondent's Gender Distribution", caption = "General Social Survey: Summary Results, Australia") + scale_fill_discrete(labels = c("2019", "2020"))
 ```
 
+```{r}
+finance <- read_csv("Table 16.1_proportion-Table 1.csv")
+finance <- data.frame(finance)
+finance <- subset(finance, select = c(1, 2, 3, 4, 5, 6))
+finance <- finance[c(8, 11, 14), ]
+colnames(finance) <- c('Description', '2006', '2010', '2014', '2019', '2020')
+finance <- 
+  finance |>
+  select(Description, `2006`, `2010`, `2014`, `2019`, `2020`) |>
+  gather(Year, Percentage, 2:6)
+```
+```{r}
+finance |> 
+  ggplot(aes(x = Description, y = as.numeric(Percentage), group = Year, fill = Year)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  theme_minimal() + 
+  labs(x = "Description", y = "Percentage (%)", title = "Figure 6: Financial Stress", caption = "General Social Survey: Summary Results, Australia") + scale_fill_discrete(labels = c("2006", "2010", "2014", "2019", "2020")) + scale_x_discrete(guide=guide_axis(n.dodge=3))
+```
 
 
+```{r}
+crime <- read_csv(file = "Table 17.1_Proportion-Table 1.csv")
+crime <- data.frame(crime)
+crime <- subset(crime, select = c(1, 4, 8, 12, 16, 20))
+crime <- crime[c(46, 47), ]
+colnames(crime) <- c('Description', '2006', '2010', '2014', '2019', '2020')
+crime <- 
+  crime |>
+  select(Description, `2006`, `2010`, `2014`, `2019`, `2020`) |>
+  gather(Year, Percentage, 2:6)
+```
+```{r}
+crime |> 
+  ggplot(aes(x = Description, y = as.numeric(Percentage), group = Year, fill = Year)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  theme_minimal() + 
+  labs(x = "Description", y = "Percentage (%)", title = "Figure 7: Crime Rate", caption = "General Social Survey: Summary Results, Australia") + scale_fill_discrete(labels = c("2006", "2010", "2014", "2019", "2020")) + scale_x_discrete(guide=guide_axis(n.dodge=2))
+```
 
+```{r}
+contact <- read_csv(file = "Table 17.1_Proportion-Table 1.csv")
+contact <- data.frame(contact)
+contact <- subset(contact, select = c(1, 4, 8, 12, 16, 20))
+contact <- contact[c(23), ]
+colnames(contact) <- c('Description', '2006', '2010', '2014', '2019', '2020')
+contact <- 
+  contact |>
+  select(Description, `2006`, `2010`, `2014`, `2019`, `2020`) |>
+  gather(Year, Percentage, 2:6)
+```
+```{r}
+contact |> 
+  ggplot(aes(x = Description, y = as.numeric(Percentage), group = Year, fill = Year)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  theme_minimal() + 
+  labs(x = "Description", y = "Percentage (%)", title = "Figure 2: Face to Face Contact with Friends or Family Outside of Household", caption = "General Social Survey: Summary Results, Australia") + scale_fill_discrete(labels = c("2006", "2010", "2014", "2019", "2020"))
+```
+
+```{r}
+discrimination <- read_csv(file = "Table 17.1_Proportion-Table 1.csv")
+discrimination <- data.frame(discrimination)
+discrimination <- subset(discrimination, select = c(1, 12, 16, 20))
+discrimination <- discrimination[c(31), ]
+colnames(discrimination) <- c('Description', '2014', '2019', '2020')
+discrimination <- 
+  discrimination |>
+  select(Description, `2014`, `2019`, `2020`) |>
+  gather(Year, Percentage, 2:4)
+```
+```{r}
+discrimination |> 
+  ggplot(aes(x = Description, y = as.numeric(Percentage), group = Year, fill = Year)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  theme_minimal() + 
+  labs(x = "Description", y = "Percentage (%)", title = "Figure 8: Discrimination", caption = "General Social Survey: Summary Results, Australia") + scale_fill_discrete(labels = c("2014", "2019", "2020"))
+```
+
+```{r}
+trust <- read_csv(file = "Table 17.1_Proportion-Table 1.csv")
+trust <- data.frame(trust)
+trust <- subset(trust, select = c(1, 4, 8, 12, 16, 20))
+trust <- trust[c(35, 36, 37), ]
+colnames(trust) <- c('Description', '2006', '2010', '2014', '2019', '2020')
+trust <- 
+  trust |>
+  select(Description, `2006`, `2010`, `2014`, `2019`, `2020`) |>
+  gather(Year, Percentage, 2:6)
+```
+```{r}
+trust |> 
+  ggplot(aes(x = Description, y = as.numeric(Percentage), group = Year, fill = Year)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  theme_minimal() + 
+  labs(x = "Feels Most People can be Trusted", y = "Percentage (%)", title = "Figure 9: Trust", caption = "General Social Survey: Summary Results, Australia") + scale_fill_discrete(labels = c("2006", "2010", "2014", "2019", "2020")) + scale_x_discrete(guide=guide_axis(n.dodge=2))
+```
+
+```{r}
+stressors <- read_csv(file = "Table 17.1_Proportion-Table 1.csv")
+stressors <- data.frame(stressors)
+stressors <- subset(stressors, select = c(1, 12, 16, 20))
+stressors <- stressors[c(40, 41, 42, 43), ]
+colnames(stressors) <- c('Description', '2014', '2019', '2020')
+stressors <- 
+  stressors |>
+  select(Description, `2014`, `2019`, `2020`) |>
+  gather(Year, Percentage, 2:4)
+```
+```{r}
+stressors |> 
+  ggplot(aes(x = Description, y = as.numeric(Percentage), group = Year, fill = Year)) +
+  geom_col(position = "dodge", alpha = 0.8) +
+  theme_minimal() + 
+  labs(x = "Description", y = "Percentage (%)", title = "Figure 10: Stressors", caption = "General Social Survey: Summary Results, Australia") + scale_fill_discrete(labels = c("2014", "2019", "2020"))+ scale_x_discrete(guide=guide_axis(n.dodge=4))
+```
 
